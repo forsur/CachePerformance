@@ -33,6 +33,9 @@ public class CachePerformanceTest {
 
                     // 模拟 cache 的读写
                     if(v % 2 == 0){
+                        if(cache.get(k) != null){
+                            hitCount.incrementAndGet(); // 原子性自增
+                        }
                         cache.put(k, v);
                     }else{
                         if(cache.get(k) != null){
@@ -54,7 +57,7 @@ public class CachePerformanceTest {
         System.out.println("Elapsed Time: " + testTime + " ms");
         System.out.println("Hit Rate: " + hitRate + "%");
         System.out.println("Number of items in cache: " + cache.getSize());
-        System.out.println(allDone ? "All done" : "Thread not done");
+        //System.out.println(allDone ? "All done" : "Thread not done");
         System.out.println(" ");
     }
 
@@ -65,7 +68,7 @@ public class CachePerformanceTest {
     public static void main(String[] args) throws InterruptedException{
         int cacheCapacity = 80;
         int testDataSize = 1000;
-        int threadCount = 8;
+        int threadCount = 14;
         // 模拟 GPU 数据存取
         int locality = 15;
         int hotKeyCount = 25;
@@ -75,6 +78,8 @@ public class CachePerformanceTest {
         Cache<Integer, Integer> randomCache = new RandomCache<Integer, Integer>(cacheCapacity);
 
         List<DataGenerator.KeyValuePair<Integer, Integer>> testData = DataGenerator.generateData(testDataSize, locality, hotKeyCount);
+
+        System.out.println("locality = " + locality + " ; hotKeyCount = " + hotKeyCount);
 
         performanceTest(lruCache, testData, "LRU", threadCount);
         performanceTest(fifoCache, testData, "FIFO", threadCount);

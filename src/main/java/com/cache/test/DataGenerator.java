@@ -13,13 +13,15 @@ public class DataGenerator {
 
         // 生成热键（频繁访问的键）
         List<Integer> hotKeys = new ArrayList<>(hotKeyCount);
-        for (int i = 0; i < hotKeyCount; i++) {
+        for(int i = 0; i < hotKeyCount; i++)
+        {
             hotKeys.add(random.nextInt(locality));
         }
 
-        for (int i = 0; i < size; i++) {
+        for(int i = 0; i < size; i++)
+        {
             int key;
-            if (random.nextDouble() < 0.2) { // 20%的概率选择热键
+            if (random.nextDouble() < 0.2) { // 选择热键的概率
                 key = hotKeys.get(random.nextInt(hotKeyCount));
             } else {
                 key = (i / locality) * locality + random.nextInt(locality);
@@ -46,6 +48,5 @@ public class DataGenerator {
             return "(" + key + ", " + value + ")";
         }
     }
-
 
 }
